@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import SkillsSidebar from '../../components/SkillsSidebar.astro';
 import { SKILLS } from '../../lib/skills';
 
 export async function getStaticPaths() {
@@ -16,14 +17,17 @@ export async function getStaticPaths() {
 }
 
 const { meta, entry } = Astro.props;
-const { Content } = entry ? await render(entry) : { Content: null };
+const rendered = entry ? await render(entry) : { Content: null, headings: [] as any[] };
+const { Content, headings } = rendered;
 
 const related = SKILLS.filter((s) => s.slug !== meta.slug && (s.category === meta.category || meta.slug === 'deliberate')).slice(0, 3);
 ---
 
 <Layout title={meta.title} description={meta.tagline}>
-  <article class="skill-page">
-    <div class="container container-prose">
+  <div class="skill-layout container">
+    <SkillsSidebar activeSlug={meta.slug} headings={headings} />
+
+    <article class="skill-page">
       <nav class="breadcrumb">
         <a href="/skills/">← All skills</a>
       </nav>
@@ -73,13 +77,30 @@ const related = SKILLS.filter((s) => s.slug !== meta.slug && (s.category === met
           </div>
         </section>
       )}
-    </div>
-  </article>
+    </article>
+  </div>
 </Layout>
 
 <style>
+  .skill-layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 44rem);
+    gap: 3rem;
+    align-items: start;
+    justify-content: start;
+  }
   .skill-page {
     padding: 3rem 0 4rem;
+    min-width: 0;
+  }
+  @media (max-width: 900px) {
+    .skill-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .skill-page {
+      padding: 2rem 0 4rem;
+    }
   }
   .breadcrumb {
     font-size: 0.875rem;

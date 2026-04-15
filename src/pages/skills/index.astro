@@ -1,21 +1,23 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import SkillsSidebar from '../../components/SkillsSidebar.astro';
 import { SKILLS, CATEGORIES } from '../../lib/skills';
 ---
 
 <Layout title="Skills" description="All Deliberate skills: Foundation, Think, Build, Investigate, Respond.">
-  <section class="skills-hero">
-    <div class="container container-prose">
-      <div class="eyebrow">Skills</div>
-      <h1 class="skills-title">One foundation. Seven specialized skills.</h1>
-      <p class="skills-lede">
-        <code>/deliberate</code> teaches the agent how to code. The rest teach the agent how to handle a specific kind of work. Load what you need.
-      </p>
-    </div>
-  </section>
+  <div class="skills-layout container">
+    <SkillsSidebar />
 
-  <section class="skills-body">
-    <div class="container">
+    <div class="skills-main">
+      <section class="skills-hero">
+        <div class="eyebrow">Skills</div>
+        <h1 class="skills-title">One foundation. Seven specialized skills.</h1>
+        <p class="skills-lede">
+          <code>/deliberate</code> teaches the agent how to code. The rest teach the agent how to handle a specific kind of work. Load what you need.
+        </p>
+      </section>
+
+      <section class="skills-body">
       {CATEGORIES.map((cat) => {
         const items = SKILLS.filter((s) => s.category === cat.key);
         if (items.length === 0) return null;
@@ -45,27 +47,51 @@ import { SKILLS, CATEGORIES } from '../../lib/skills';
           </div>
         );
       })}
+      </section>
     </div>
-  </section>
+  </div>
 </Layout>
 
 <style>
+  .skills-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .skills-main {
+    min-width: 0;
+    padding: 2rem 0 5rem;
+  }
   .skills-hero {
-    padding: 5rem 0 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 3rem;
   }
   .skills-title {
     margin-top: 1rem;
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
     line-height: 1.1;
   }
   .skills-lede {
-    margin-top: 1.5rem;
-    font-size: 1.125rem;
+    margin-top: 1.25rem;
+    font-size: 1.0625rem;
     color: var(--ink-soft);
+    max-width: 42rem;
   }
 
   .skills-body {
-    padding: 1rem 0 5rem;
+    padding: 0;
+  }
+
+  @media (max-width: 900px) {
+    .skills-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .skills-main {
+      padding-top: 1rem;
+    }
   }
 
   .cat-block {
