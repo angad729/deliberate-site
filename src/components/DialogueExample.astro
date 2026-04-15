@@ -1,0 +1,242 @@
+---
+import type { DialogueExample } from '../lib/examples';
+
+interface Props {
+  example: DialogueExample;
+}
+
+const { example } = Astro.props;
+
+// Simple markdown-ish renderer for **bold** and `code` in bubble text.
+function renderInline(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+function renderBlock(text: string): string {
+  return text
+    .split(/\n\n+/)
+    .map((para) => {
+      const lines = para.split('\n');
+      // Numbered list
+      if (lines.every((l) => /^\d+\.\s/.test(l))) {
+        return (
+          '<ol>' +
+          lines.map((l) => `<li>${renderInline(l.replace(/^\d+\.\s/, ''))}</li>`).join('') +
+          '</ol>'
+        );
+      }
+      // Bulleted list
+      if (lines.every((l) => /^-\s/.test(l))) {
+        return (
+          '<ul>' +
+          lines.map((l) => `<li>${renderInline(l.replace(/^-\s/, ''))}</li>`).join('') +
+          '</ul>'
+        );
+      }
+      return `<p>${renderInline(para).replace(/\n/g, '<br />')}</p>`;
+    })
+    .join('');
+}
+
+const genericHtml = renderBlock(example.generic);
+const deliberateHtml = renderBlock(example.deliberate);
+const userHtml = renderBlock(example.user);
+---
+
+<article class="dialogue-example" id={example.id}>
+  <header class="ex-head">
+    <div class="ex-meta">
+      <span class="ex-failure">{example.failureMode}</span>
+      <span class="ex-dot">·</span>
+      <a href={`/skills/${example.counteredBy.slug}/`} class="ex-countered">
+        countered by <span class="cmd">{example.counteredBy.cmd}</span>
+      </a>
+    </div>
+    <h3 class="ex-headline">{example.headline}</h3>
+  </header>
+
+  <div class="turn user-turn">
+    <div class="bubble-label">
+      <span class="bubble-avatar user-avatar">you</span>
+    </div>
+    <div class="bubble user-bubble" set:html={userHtml}></div>
+  </div>
+
+  <div class="responses">
+    <div class="turn">
+      <div class="bubble-label">
+        <span class="bubble-avatar generic-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+        </span>
+        <span class="bubble-label-text muted">Generic AI</span>
+      </div>
+      <div class="bubble generic-bubble" set:html={genericHtml}></div>
+    </div>
+
+    <div class="turn">
+      <div class="bubble-label">
+        <span class="bubble-avatar deliberate-avatar" aria-hidden="true">◐</span>
+        <span class="bubble-label-text deliberate-label">With Deliberate</span>
+      </div>
+      <div class="bubble deliberate-bubble" set:html={deliberateHtml}></div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .dialogue-example {
+    padding: 2rem 0 2.5rem;
+    border-bottom: 1px dashed var(--line);
+  }
+  .dialogue-example:last-child { border-bottom: none; }
+
+  .ex-head {
+    margin-bottom: 1.5rem;
+  }
+  .ex-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+    margin-bottom: 0.625rem;
+  }
+  .ex-failure {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    background: var(--accent-soft-2);
+    padding: 0.25rem 0.625rem;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .ex-dot { color: var(--muted); opacity: 0.6; }
+  .ex-countered {
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+  .ex-countered:hover { color: var(--accent); }
+  .ex-countered .cmd { font-size: 0.8125rem; }
+  .ex-headline {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 44rem;
+  }
+
+  .user-turn {
+    margin-bottom: 1rem;
+  }
+  .turn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .bubble-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+  .bubble-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .user-avatar {
+    background: var(--line-soft);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  .generic-avatar {
+    background: var(--line-soft);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  .deliberate-avatar {
+    background: var(--accent-soft-2);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    font-size: 0.875rem;
+  }
+  .bubble-label-text {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .deliberate-label {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .bubble {
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    max-width: none;
+  }
+  .bubble p { max-width: none; margin: 0; }
+  .bubble p + p { margin-top: 0.75rem; }
+  .bubble ul, .bubble ol {
+    margin: 0.5rem 0 0 1.25rem;
+    padding: 0;
+  }
+  .bubble li { margin-bottom: 0.3rem; }
+  .bubble li:last-child { margin-bottom: 0; }
+  .bubble code {
+    font-size: 0.85em;
+  }
+
+  .user-bubble {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .generic-bubble {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .deliberate-bubble {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    color: var(--ink);
+  }
+  .deliberate-bubble strong {
+    color: var(--accent);
+  }
+
+  .responses {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (max-width: 760px) {
+    .responses {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+</style>

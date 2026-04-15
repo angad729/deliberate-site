@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import DialogueExample from '../components/DialogueExample.astro';
+import CodeExample from '../components/CodeExample.astro';
+import { EXAMPLES } from '../lib/examples';
 
 type Mode = {
   id: string;
@@ -81,8 +84,38 @@ const CATEGORIES = Array.from(new Set(MODES.map((m) => m.category)));
     </div>
   </section>
 
+  <section class="in-action">
+    <div class="container container-prose">
+      <div class="section-head">
+        <div class="eyebrow">In action</div>
+        <h2 class="in-action-title">What the difference looks like.</h2>
+        <p class="in-action-lede">
+          Six failure modes, shown side-by-side. Same prompt, same task - the left is what you usually get, the right is what a Deliberate-loaded agent produces instead.
+        </p>
+      </div>
+
+      <div class="examples">
+        {EXAMPLES.map((ex) =>
+          ex.type === 'dialogue' ? (
+            <DialogueExample example={ex} />
+          ) : (
+            <CodeExample example={ex} />
+          )
+        )}
+      </div>
+    </div>
+  </section>
+
   <section class="modes-body">
     <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Full catalog</div>
+        <h2 class="catalog-title">All {MODES.length} failure modes.</h2>
+        <p class="catalog-lede muted">
+          The complete index. Find the one that matches your pain, jump to the skill.
+        </p>
+      </div>
+
       {CATEGORIES.map((cat) => {
         const items = MODES.filter((m) => m.category === cat);
         return (
@@ -130,8 +163,29 @@ const CATEGORIES = Array.from(new Set(MODES.map((m) => m.category)));
     font-size: 0.8125rem;
   }
 
+  .in-action {
+    padding: 1rem 0 4rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .section-head {
+    margin-bottom: 2rem;
+  }
+  .in-action-title, .catalog-title {
+    margin-top: 1rem;
+    font-size: clamp(1.875rem, 3vw, 2.5rem);
+    line-height: 1.15;
+  }
+  .in-action-lede, .catalog-lede {
+    margin-top: 1rem;
+    font-size: 1.0625rem;
+    color: var(--ink-soft);
+  }
+  .examples {
+    margin-top: 1rem;
+  }
+
   .modes-body {
-    padding: 2rem 0 5rem;
+    padding: 4rem 0 5rem;
   }
 
   .mode-cat {

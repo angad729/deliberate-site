@@ -1,0 +1,218 @@
+---
+import { Code } from 'astro:components';
+import type { CodeExample } from '../lib/examples';
+
+interface Props {
+  example: CodeExample;
+}
+
+const { example } = Astro.props;
+
+function renderInline(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+---
+
+<article class="code-example" id={example.id}>
+  <header class="ex-head">
+    <div class="ex-meta">
+      <span class="ex-failure">{example.failureMode}</span>
+      <span class="ex-dot">·</span>
+      <a href={`/skills/${example.counteredBy.slug}/`} class="ex-countered">
+        countered by <span class="cmd">{example.counteredBy.cmd}</span>
+      </a>
+    </div>
+    <h3 class="ex-headline">{example.headline}</h3>
+  </header>
+
+  <div class="task">
+    <span class="task-label">Task</span>
+    <span class="task-text">{example.task}</span>
+  </div>
+
+  <div class="code-grid">
+    <div class="code-col code-col-generic">
+      <div class="code-col-head">
+        <span class="bubble-avatar generic-avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+        </span>
+        <span class="code-col-label muted">Generic AI</span>
+      </div>
+      <div class="code-wrap">
+        <Code code={example.genericCode} lang={example.lang as any} theme="github-dark-dimmed" wrap />
+      </div>
+    </div>
+
+    <div class="code-col code-col-deliberate">
+      <div class="code-col-head">
+        <span class="bubble-avatar deliberate-avatar" aria-hidden="true">◐</span>
+        <span class="code-col-label deliberate-label">With Deliberate</span>
+      </div>
+      <div class="code-wrap">
+        <Code code={example.deliberateCode} lang={example.lang as any} theme="github-dark-dimmed" wrap />
+      </div>
+    </div>
+  </div>
+
+  {example.note && (
+    <p class="code-note" set:html={renderInline(example.note)}></p>
+  )}
+</article>
+
+<style>
+  .code-example {
+    padding: 2rem 0 2.5rem;
+    border-bottom: 1px dashed var(--line);
+  }
+  .code-example:last-child { border-bottom: none; }
+
+  .ex-head {
+    margin-bottom: 1.25rem;
+  }
+  .ex-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+    margin-bottom: 0.625rem;
+  }
+  .ex-failure {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    background: var(--accent-soft-2);
+    padding: 0.25rem 0.625rem;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .ex-dot { color: var(--muted); opacity: 0.6; }
+  .ex-countered {
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+  .ex-countered:hover { color: var(--accent); }
+  .ex-countered .cmd { font-size: 0.8125rem; }
+  .ex-headline {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 44rem;
+  }
+
+  .task {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    padding: 0.5rem 1rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  .task-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .task-text {
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .code-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .code-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .code-col-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .bubble-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .generic-avatar {
+    background: var(--line-soft);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  .deliberate-avatar {
+    background: var(--accent-soft-2);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    font-size: 0.875rem;
+  }
+  .code-col-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .deliberate-label {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .code-wrap {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .code-col-deliberate .code-wrap {
+    box-shadow: 0 0 0 1px var(--accent-border);
+  }
+  .code-wrap :global(pre) {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  .code-note {
+    margin-top: 1rem;
+    padding: 0.875rem 1.125rem;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent-border);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: none;
+  }
+  .code-note strong { color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .code-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+</style>
