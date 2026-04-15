@@ -1,0 +1,14 @@
+Deliberate Site
+Copyright 2026 Angad Kandhari
+
+This product is licensed under the Apache License, Version 2.0.
+See the LICENSE file for the full license text.
+
+This is the marketing site for Deliberate (https://github.com/angad729/deliberate).
+Skill content is pulled from that repo as a git submodule at content/deliberate/.
+
+Site design inspired by Impeccable (https://impeccable.style/) by
+Paul Bakaus (https://github.com/pbakaus). No code or assets from Impeccable
+are included in this repository.
+
+Built with Astro (https://astro.build). Hosted on Cloudflare Pages.
