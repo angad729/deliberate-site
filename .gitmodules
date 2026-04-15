@@ -1,0 +1,3 @@
+[submodule "content/deliberate"]
+	path = content/deliberate
+	url = https://github.com/angad729/deliberate.git
