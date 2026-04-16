@@ -32,18 +32,28 @@ const specialized = SKILLS.filter((s) => s.slug !== 'deliberate');
           <div class="works-with">
             <span class="works-with-label mono">Works with</span>
             <div class="harness-logos">
-              <span class="harness" title="Claude Code">Claude</span>
-              <span class="harness" title="Cursor">Cursor</span>
-              <span class="harness" title="Codex CLI">Codex</span>
-              <span class="harness" title="Gemini CLI">Gemini</span>
-              <span class="harness" title="Windsurf">Windsurf</span>
+              <span class="harness" title="Claude Code" aria-label="Claude Code">
+                <img src="/logos/claude.svg" alt="" width="16" height="16" />
+              </span>
+              <span class="harness" title="Cursor" aria-label="Cursor">
+                <img src="/logos/cursor.svg" alt="" width="16" height="16" />
+              </span>
+              <span class="harness" title="Codex CLI" aria-label="Codex CLI">
+                <img src="/logos/openai.svg" alt="" width="16" height="16" />
+              </span>
+              <span class="harness" title="Gemini CLI" aria-label="Gemini CLI">
+                <img src="/logos/googlegemini.svg" alt="" width="16" height="16" />
+              </span>
+              <span class="harness" title="Windsurf" aria-label="Windsurf">
+                <img src="/logos/windsurf.svg" alt="" width="16" height="16" />
+              </span>
               <span class="harness harness-more">+35 more</span>
             </div>
           </div>
         </div>
 
         <div class="hero-version mono muted">
-          v3.0.0 · Installable via <code>npx skills add angad729/deliberate</code>
+          v3.1.0 · Installable via <code>npx skills add angad729/deliberate</code>
         </div>
       </div>
 
@@ -190,7 +200,7 @@ const specialized = SKILLS.filter((s) => s.slug !== 'deliberate');
       <div class="eyebrow">Why</div>
       <h2 class="why-title">The models will keep writing code. <span class="accent">How</span> they write it is still up to us.</h2>
       <p class="why-body">
-        In late 2025, Andrej Karpathy <a href="https://x.com/karpathy/status/1915485966336389126" target="_blank" rel="noopener">posted a thread</a> on what changed - and what didn't - as agent coding crossed a coherence threshold. The diagnosis was sharp:
+        In late 2025, Andrej Karpathy <a href="https://x.com/karpathy/status/2015883857489522876" target="_blank" rel="noopener">posted a thread</a> on what changed - and what didn't - as agent coding crossed a coherence threshold. The diagnosis was sharp:
       </p>
       <blockquote class="why-quote">
         "The models make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, don't seek clarifications, don't surface inconsistencies, don't present tradeoffs, don't push back when they should."
@@ -328,20 +338,43 @@ const specialized = SKILLS.filter((s) => s.slug !== 'deliberate');
     flex-wrap: wrap;
   }
   .harness {
-    display: inline-block;
-    padding: 0.3rem 0.625rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--ink-soft);
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: #f3f1ec;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 7px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .harness:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  .harness img {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+  :global([data-theme='dark']) .harness {
+    background: #ece9e3;
+    border-color: rgba(0, 0, 0, 0.08);
   }
   .harness-more {
+    width: auto;
+    height: 30px;
+    padding: 0 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
     color: var(--muted);
     background: transparent;
-    border-style: dashed;
+    border: 1px dashed var(--line);
+    border-radius: 7px;
+  }
+  .harness-more:hover {
+    transform: none;
+    box-shadow: none;
   }
 
   .hero-version {
@@ -427,7 +460,7 @@ const specialized = SKILLS.filter((s) => s.slug !== 'deliberate');
     color: var(--accent-on-strong);
     background: var(--accent);
   }
-  [data-theme='dark'] .split-badge-after {
+  :global([data-theme='dark']) .split-badge-after {
     color: var(--paper);
     background: var(--accent);
   }
@@ -458,41 +491,28 @@ const specialized = SKILLS.filter((s) => s.slug !== 'deliberate');
     border: 1px solid;
   }
   .split-flag-red {
-    color: #b91a1a;
-    background: #fdecec;
-    border-color: #f3c2c2;
+    color: #9a4b21;
+    background: #f7eade;
+    border-color: #e5c9ae;
   }
-  [data-theme='dark'] .split-flag-red {
-    color: #ff8080;
-    background: rgba(244, 63, 63, 0.12);
-    border-color: rgba(244, 63, 63, 0.3);
+  :global([data-theme='dark']) .split-flag-red {
+    color: #5a2b11;
+    background: #e8c6ac;
+    border-color: transparent;
   }
   .split-flag-green {
     color: var(--forest-800);
     background: var(--accent-soft-2);
     border-color: var(--accent-border);
   }
-  [data-theme='dark'] .split-flag-green {
-    color: var(--forest-200);
-    background: rgba(61, 138, 86, 0.18);
-    border-color: rgba(162, 205, 176, 0.3);
+  :global([data-theme='dark']) .split-flag-green {
+    color: #0f3320;
+    background: #bfdcc9;
+    border-color: transparent;
   }
 
   .split-divider {
     height: 0;
-  }
-  .split-responses::before {
-    content: '';
-    position: absolute;
-    left: 15%;
-    right: 15%;
-    top: 50%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
-    transform: translateY(-50%) rotate(-2.5deg);
-    z-index: 1;
-    opacity: 0.5;
-    pointer-events: none;
   }
 
   .split-caption {
