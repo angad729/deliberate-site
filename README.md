@@ -1,6 +1,6 @@
 # deliberate-site
 
-Marketing site for [Deliberate](https://github.com/angad729/deliberate) — engineering discipline for AI harnesses.
+Marketing site for [Deliberate](https://github.com/angad-kandhari/deliberate) — engineering discipline for AI harnesses.
 
 Live at **[deliberate.work](https://deliberate.work)**.
 
@@ -10,14 +10,14 @@ Live at **[deliberate.work](https://deliberate.work)**.
 
 Astro static site that documents the Deliberate skill library. Hosted on Cloudflare Pages.
 
-The skill content itself lives in a separate repo ([angad729/deliberate](https://github.com/angad729/deliberate)) and is pulled in here as a git submodule at `content/deliberate/`. This keeps the skills repo small and clean for `npx skills add` consumers while letting the site render skill markdown directly.
+The skill content itself lives in a separate repo ([angad-kandhari/deliberate](https://github.com/angad-kandhari/deliberate)) and is pulled in here as a git submodule at `content/deliberate/`. This keeps the skills repo small and clean for `npx skills add` consumers while letting the site render skill markdown directly.
 
 ---
 
 ## Local development
 
 ```
-git clone --recurse-submodules https://github.com/angad729/deliberate-site.git
+git clone --recurse-submodules https://github.com/angad-kandhari/deliberate-site.git
 cd deliberate-site
 npm install
 npm run dev
@@ -54,7 +54,7 @@ Cloudflare Pages will rebuild with the new content.
 
 ```
 .
-├── content/deliberate/       # submodule → angad729/deliberate
+├── content/deliberate/       # submodule → angad-kandhari/deliberate
 │   └── skills/<name>/SKILL.md
 ├── src/
 │   ├── pages/                # Astro route files
